@@ -34,6 +34,49 @@ interface DemoResult {
     nNoise?: number;
     // SVM
     supportVectors?: number;
+    // Sorting
+    comparisons?: number;
+    swaps?: number;
+    executionTime?: number;
+    arraySize?: number;
+    isSorted?: boolean;
+    // Searching
+    stepsCount?: number;
+    targetIndex?: number;
+    isFound?: boolean;
+    searchTarget?: number;
+    // Graph
+    nodesVisited?: number;
+    pathLength?: number;
+    edgesProcessed?: number;
+    pathFound?: boolean;
+    // Deep Learning
+    trainLoss?: number;
+    valLoss?: number;
+    trainAccuracy?: number;
+    valAccuracy?: number;
+    epochsCompleted?: number;
+    layers?: number;
+    // Statistics
+    mean?: number;
+    median?: number;
+    mode?: string;
+    variance?: number;
+    stdDev?: number;
+    correlation?: number;
+    posterior?: number;
+    steps?: number;
+    // Security
+    encryptionStrength?: number;
+    keySize?: number;
+    outputLength?: number;
+    hashLength?: number;
+    // Recommendation
+    precisionAt?: number;
+    recallAt?: number;
+    hitRate?: number;
+    cacheHits?: number;
+    cacheMisses?: number;
 }
 
 interface APIResponse {
@@ -279,6 +322,9 @@ export const AlgorithmDemo = ({ algorithmId }: AlgorithmDemoProps) => {
     const [epsilon, setEpsilon] = useState(0.5);
     const [minSamples, setMinSamples] = useState(5);
     const [cValue, setCValue] = useState(1.0);
+    const [maxDepth, setMaxDepth] = useState(5);
+    const [nNeighbors, setNNeighbors] = useState(5);
+    const [arraySize, setArraySize] = useState(50);
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -358,51 +404,234 @@ export const AlgorithmDemo = ({ algorithmId }: AlgorithmDemoProps) => {
                 };
             // Sorting algorithms
             case 'quick-sort':
+                return {
+                    comparisons: Math.floor(arraySize * Math.log2(arraySize) * (0.9 + Math.random() * 0.2)),
+                    swaps: Math.floor(arraySize * Math.log2(arraySize) * 0.3 * (0.8 + Math.random() * 0.4)),
+                    executionTime: parseFloat((arraySize * 0.02 * (0.8 + Math.random() * 0.4)).toFixed(2)),
+                    arraySize: arraySize,
+                    isSorted: true
+                };
             case 'merge-sort':
+                return {
+                    comparisons: Math.floor(arraySize * Math.log2(arraySize) * (0.95 + Math.random() * 0.1)),
+                    swaps: Math.floor(arraySize * Math.log2(arraySize)),
+                    executionTime: parseFloat((arraySize * 0.025 * (0.85 + Math.random() * 0.3)).toFixed(2)),
+                    arraySize: arraySize,
+                    isSorted: true
+                };
             case 'bubble-sort':
+                return {
+                    comparisons: Math.floor(arraySize * arraySize * 0.5 * (0.9 + Math.random() * 0.2)),
+                    swaps: Math.floor(arraySize * arraySize * 0.25 * (0.7 + Math.random() * 0.6)),
+                    executionTime: parseFloat((arraySize * arraySize * 0.001 * (0.8 + Math.random() * 0.4)).toFixed(2)),
+                    arraySize: arraySize,
+                    isSorted: true
+                };
             case 'heap-sort':
+                return {
+                    comparisons: Math.floor(arraySize * Math.log2(arraySize) * 2 * (0.9 + Math.random() * 0.2)),
+                    swaps: Math.floor(arraySize * Math.log2(arraySize) * (0.8 + Math.random() * 0.4)),
+                    executionTime: parseFloat((arraySize * 0.03 * (0.85 + Math.random() * 0.3)).toFixed(2)),
+                    arraySize: arraySize,
+                    isSorted: true
+                };
             case 'insertion-sort':
-                return { accuracy: 100 } as DemoResult;
+                return {
+                    comparisons: Math.floor(arraySize * arraySize * 0.25 * (0.8 + Math.random() * 0.4)),
+                    swaps: Math.floor(arraySize * arraySize * 0.25 * (0.6 + Math.random() * 0.8)),
+                    executionTime: parseFloat((arraySize * arraySize * 0.0008 * (0.7 + Math.random() * 0.6)).toFixed(2)),
+                    arraySize: arraySize,
+                    isSorted: true
+                };
             // Searching algorithms  
             case 'binary-search':
+                return {
+                    stepsCount: Math.floor(Math.log2(arraySize) + 1),
+                    comparisons: Math.floor(Math.log2(arraySize) * (0.8 + Math.random() * 0.4)),
+                    targetIndex: Math.random() > 0.15 ? Math.floor(Math.random() * arraySize) : -1,
+                    isFound: Math.random() > 0.15,
+                    arraySize: arraySize,
+                    executionTime: parseFloat((0.01 + Math.random() * 0.02).toFixed(3)),
+                    searchTarget: Math.floor(Math.random() * 100)
+                };
             case 'linear-search':
-                return { accuracy: 100 } as DemoResult;
+                const foundIdx = Math.random() > 0.15 ? Math.floor(Math.random() * arraySize) : -1;
+                return {
+                    stepsCount: foundIdx >= 0 ? foundIdx + 1 : arraySize,
+                    comparisons: foundIdx >= 0 ? foundIdx + 1 : arraySize,
+                    targetIndex: foundIdx,
+                    isFound: foundIdx >= 0,
+                    arraySize: arraySize,
+                    executionTime: parseFloat((arraySize * 0.005 * (0.5 + Math.random() * 1)).toFixed(3)),
+                    searchTarget: Math.floor(Math.random() * 100)
+                };
             // Graph algorithms
             case 'dijkstra':
-            case 'bfs-dfs':
             case 'a-star':
+                return {
+                    nodesVisited: Math.floor(5 + Math.random() * 4),
+                    pathLength: Math.floor(8 + Math.random() * 10),
+                    edgesProcessed: Math.floor(10 + Math.random() * 8),
+                    pathFound: true,
+                    executionTime: parseFloat((0.5 + Math.random() * 1.5).toFixed(2))
+                };
+            case 'bfs-dfs':
+                return {
+                    nodesVisited: Math.floor(6 + Math.random() * 3),
+                    pathLength: Math.floor(3 + Math.random() * 4),
+                    edgesProcessed: Math.floor(8 + Math.random() * 6),
+                    pathFound: true,
+                    executionTime: parseFloat((0.3 + Math.random() * 1).toFixed(2))
+                };
             case 'bellman-ford':
+                return {
+                    nodesVisited: 8,
+                    pathLength: Math.floor(10 + Math.random() * 8),
+                    edgesProcessed: Math.floor(50 + Math.random() * 30),
+                    pathFound: true,
+                    executionTime: parseFloat((1 + Math.random() * 2).toFixed(2))
+                };
             case 'floyd-warshall':
+                return {
+                    nodesVisited: 8,
+                    pathLength: Math.floor(8 + Math.random() * 12),
+                    edgesProcessed: Math.floor(64 + Math.random() * 20),
+                    pathFound: true,
+                    executionTime: parseFloat((2 + Math.random() * 3).toFixed(2))
+                };
             case 'pagerank':
-                return { accuracy: 100 } as DemoResult;
+                return {
+                    nodesVisited: 8,
+                    edgesProcessed: Math.floor(80 + Math.random() * 40),
+                    executionTime: parseFloat((1.5 + Math.random() * 2).toFixed(2)),
+                    accuracy: 95 + Math.random() * 5
+                };
             // Deep Learning
             case 'neural-network':
+                return {
+                    trainAccuracy: 92 + Math.random() * 6,
+                    valAccuracy: 88 + Math.random() * 8,
+                    trainLoss: 0.08 + Math.random() * 0.12,
+                    valLoss: 0.15 + Math.random() * 0.15,
+                    epochsCompleted: 10,
+                    layers: 4,
+                    executionTime: parseFloat((2 + Math.random() * 3).toFixed(2))
+                };
             case 'cnn':
+                return {
+                    trainAccuracy: 95 + Math.random() * 4,
+                    valAccuracy: 92 + Math.random() * 5,
+                    trainLoss: 0.04 + Math.random() * 0.08,
+                    valLoss: 0.10 + Math.random() * 0.12,
+                    epochsCompleted: 15,
+                    layers: 7,
+                    executionTime: parseFloat((5 + Math.random() * 5).toFixed(2))
+                };
             case 'rnn-lstm':
+                return {
+                    trainAccuracy: 88 + Math.random() * 8,
+                    valAccuracy: 85 + Math.random() * 8,
+                    trainLoss: 0.12 + Math.random() * 0.15,
+                    valLoss: 0.18 + Math.random() * 0.2,
+                    epochsCompleted: 20,
+                    layers: 5,
+                    executionTime: parseFloat((8 + Math.random() * 7).toFixed(2))
+                };
             case 'transformer':
                 return {
-                    accuracy: 92 + Math.random() * 6,
-                    precision: 0.90 + Math.random() * 0.08
+                    trainAccuracy: 94 + Math.random() * 5,
+                    valAccuracy: 91 + Math.random() * 6,
+                    trainLoss: 0.06 + Math.random() * 0.1,
+                    valLoss: 0.12 + Math.random() * 0.15,
+                    epochsCompleted: 10,
+                    layers: 6,
+                    executionTime: parseFloat((10 + Math.random() * 10).toFixed(2))
                 };
             // Statistics
             case 'descriptive-stats':
+                return {
+                    mean: 45.5 + Math.random() * 10,
+                    median: 44 + Math.random() * 12,
+                    mode: '42, 47',
+                    variance: 150 + Math.random() * 50,
+                    stdDev: 12 + Math.random() * 3,
+                    executionTime: parseFloat((0.05 + Math.random() * 0.1).toFixed(3))
+                };
             case 'standard-deviation':
+                return {
+                    mean: 50 + Math.random() * 20,
+                    variance: 100 + Math.random() * 80,
+                    stdDev: 10 + Math.random() * 5,
+                    executionTime: parseFloat((0.03 + Math.random() * 0.05).toFixed(3))
+                };
             case 'correlation':
+                return {
+                    correlation: 0.3 + Math.random() * 0.6,
+                    executionTime: parseFloat((0.04 + Math.random() * 0.06).toFixed(3))
+                };
             case 'bayesian-inference':
+                return {
+                    posterior: 0.4 + Math.random() * 0.4,
+                    executionTime: parseFloat((0.02 + Math.random() * 0.03).toFixed(3))
+                };
             case 'markov-chain':
-                return { accuracy: 100 } as DemoResult;
+                return {
+                    steps: 20 + Math.floor(Math.random() * 30),
+                    executionTime: parseFloat((0.5 + Math.random() * 1).toFixed(2))
+                };
             // Security
             case 'aes':
+                return {
+                    encryptionStrength: 256,
+                    keySize: 256,
+                    outputLength: 32,
+                    executionTime: parseFloat((0.01 + Math.random() * 0.02).toFixed(3))
+                };
             case 'rsa':
+                return {
+                    encryptionStrength: 2048,
+                    keySize: 2048,
+                    outputLength: 256,
+                    executionTime: parseFloat((0.1 + Math.random() * 0.2).toFixed(3))
+                };
             case 'sha-256':
+                return {
+                    hashLength: 256,
+                    outputLength: 64,
+                    executionTime: parseFloat((0.005 + Math.random() * 0.01).toFixed(4))
+                };
             case 'hmac':
+                return {
+                    hashLength: 256,
+                    keySize: 256,
+                    outputLength: 64,
+                    executionTime: parseFloat((0.008 + Math.random() * 0.012).toFixed(4))
+                };
             case 'diffie-hellman':
-                return { accuracy: 100 } as DemoResult;
+                return {
+                    keySize: 2048,
+                    executionTime: parseFloat((0.15 + Math.random() * 0.25).toFixed(3))
+                };
             // Recommendation
             case 'collaborative-filtering':
+                return {
+                    precisionAt: 0.75 + Math.random() * 0.2,
+                    recallAt: 0.65 + Math.random() * 0.25,
+                    executionTime: parseFloat((0.1 + Math.random() * 0.2).toFixed(3))
+                };
             case 'content-based-filtering':
+                return {
+                    precisionAt: 0.7 + Math.random() * 0.2,
+                    recallAt: 0.6 + Math.random() * 0.25,
+                    executionTime: parseFloat((0.08 + Math.random() * 0.15).toFixed(3))
+                };
             case 'lru-cache':
-                return { accuracy: 85 + Math.random() * 10 };
+                return {
+                    hitRate: 0.7 + Math.random() * 0.25,
+                    cacheHits: Math.floor(70 + Math.random() * 25),
+                    cacheMisses: Math.floor(5 + Math.random() * 25),
+                    executionTime: parseFloat((0.001 + Math.random() * 0.002).toFixed(4))
+                };
             default:
                 return { accuracy: 85 };
         }
@@ -547,6 +776,190 @@ export const AlgorithmDemo = ({ algorithmId }: AlgorithmDemoProps) => {
                         </div>
                     </>
                 );
+            case 'hierarchical-clustering':
+                return (
+                    <div className="space-y-2">
+                        <div className="flex justify-between">
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Target Clusters</label>
+                            <span className="text-xs text-[#004040] font-mono font-bold">{kValue}</span>
+                        </div>
+                        <Slider value={[kValue]} onValueChange={(v) => setKValue(v[0])} min={2} max={8} step={1} />
+                        <p className="text-xs text-gray-500 italic">Use the visualizer above to see the clustering animation</p>
+                    </div>
+                );
+            case 'decision-tree':
+                return (
+                    <>
+                        <div className="space-y-2">
+                            <div className="flex justify-between">
+                                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Max Depth</label>
+                                <span className="text-xs text-green-600 font-mono font-bold">{maxDepth}</span>
+                            </div>
+                            <Slider value={[maxDepth]} onValueChange={(v) => setMaxDepth(v[0])} min={2} max={15} step={1} />
+                        </div>
+                        <div className="space-y-2">
+                            <div className="flex justify-between">
+                                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Train Ratio</label>
+                                <span className="text-xs text-green-600 font-mono font-bold">{trainRatio}%</span>
+                            </div>
+                            <Slider value={[trainRatio]} onValueChange={(v) => setTrainRatio(v[0])} min={60} max={90} step={5} />
+                        </div>
+                    </>
+                );
+            case 'random-forest':
+                return (
+                    <>
+                        <div className="space-y-2">
+                            <div className="flex justify-between">
+                                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Max Depth</label>
+                                <span className="text-xs text-emerald-600 font-mono font-bold">{maxDepth}</span>
+                            </div>
+                            <Slider value={[maxDepth]} onValueChange={(v) => setMaxDepth(v[0])} min={2} max={20} step={1} />
+                        </div>
+                        <div className="space-y-2">
+                            <div className="flex justify-between">
+                                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Train Ratio</label>
+                                <span className="text-xs text-emerald-600 font-mono font-bold">{trainRatio}%</span>
+                            </div>
+                            <Slider value={[trainRatio]} onValueChange={(v) => setTrainRatio(v[0])} min={60} max={90} step={5} />
+                        </div>
+                    </>
+                );
+            case 'knn':
+                return (
+                    <>
+                        <div className="space-y-2">
+                            <div className="flex justify-between">
+                                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">K Neighbors</label>
+                                <span className="text-xs text-blue-600 font-mono font-bold">{nNeighbors}</span>
+                            </div>
+                            <Slider value={[nNeighbors]} onValueChange={(v) => setNNeighbors(v[0])} min={1} max={15} step={1} />
+                        </div>
+                        <div className="space-y-2">
+                            <div className="flex justify-between">
+                                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Train Ratio</label>
+                                <span className="text-xs text-blue-600 font-mono font-bold">{trainRatio}%</span>
+                            </div>
+                            <Slider value={[trainRatio]} onValueChange={(v) => setTrainRatio(v[0])} min={60} max={90} step={5} />
+                        </div>
+                    </>
+                );
+            case 'quick-sort':
+            case 'merge-sort':
+            case 'bubble-sort':
+            case 'heap-sort':
+            case 'insertion-sort':
+                return (
+                    <div className="space-y-2">
+                        <div className="flex justify-between">
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Array Size</label>
+                            <span className="text-xs text-orange-600 font-mono font-bold">{arraySize}</span>
+                        </div>
+                        <Slider value={[arraySize]} onValueChange={(v) => setArraySize(v[0])} min={10} max={200} step={10} />
+                        <p className="text-xs text-gray-500 italic">Use the visualizer above to see the sorting animation</p>
+                    </div>
+                );
+            case 'binary-search':
+            case 'linear-search':
+                return (
+                    <div className="space-y-2">
+                        <div className="flex justify-between">
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Array Size</label>
+                            <span className="text-xs text-cyan-600 font-mono font-bold">{arraySize}</span>
+                        </div>
+                        <Slider value={[arraySize]} onValueChange={(v) => setArraySize(v[0])} min={10} max={200} step={10} />
+                        <p className="text-xs text-gray-500 italic">Use the visualizer above to see the search animation</p>
+                    </div>
+                );
+            case 'dijkstra':
+            case 'bfs-dfs':
+            case 'a-star':
+            case 'bellman-ford':
+            case 'floyd-warshall':
+            case 'pagerank':
+                return (
+                    <div className="space-y-2">
+                        <p className="text-xs text-gray-500 italic">Use the visualizer above to run the graph algorithm with full animation</p>
+                        <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+                            <div className="text-xs text-indigo-600 font-medium">📊 The visualizer shows:</div>
+                            <ul className="text-xs text-gray-600 mt-1 space-y-1">
+                                <li>• Node traversal animation</li>
+                                <li>• Edge exploration</li>
+                                <li>• Shortest path highlighting</li>
+                            </ul>
+                        </div>
+                    </div>
+                );
+            case 'neural-network':
+            case 'cnn':
+            case 'rnn-lstm':
+            case 'transformer':
+                return (
+                    <div className="space-y-2">
+                        <p className="text-xs text-gray-500 italic">Use the visualizer above to train the neural network with full animation</p>
+                        <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                            <div className="text-xs text-purple-600 font-medium">🧠 The visualizer shows:</div>
+                            <ul className="text-xs text-gray-600 mt-1 space-y-1">
+                                <li>• Network architecture layers</li>
+                                <li>• Forward/backward pass animation</li>
+                                <li>• Training loss curve</li>
+                                <li>• Real-time accuracy metrics</li>
+                            </ul>
+                        </div>
+                    </div>
+                );
+            case 'descriptive-stats':
+            case 'standard-deviation':
+            case 'correlation':
+            case 'bayesian-inference':
+            case 'markov-chain':
+                return (
+                    <div className="space-y-2">
+                        <p className="text-xs text-gray-500 italic">Use the visualizer above for interactive calculation</p>
+                        <div className="p-3 bg-teal-50 rounded-lg border border-teal-200">
+                            <div className="text-xs text-teal-600 font-medium">📊 The visualizer shows:</div>
+                            <ul className="text-xs text-gray-600 mt-1 space-y-1">
+                                <li>• Input data entry</li>
+                                <li>• Real-time calculations</li>
+                                <li>• Data distribution chart</li>
+                            </ul>
+                        </div>
+                    </div>
+                );
+            case 'aes':
+            case 'rsa':
+            case 'sha-256':
+            case 'hmac':
+            case 'diffie-hellman':
+                return (
+                    <div className="space-y-2">
+                        <p className="text-xs text-gray-500 italic">Use the visualizer above for interactive encryption/hashing</p>
+                        <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+                            <div className="text-xs text-red-600 font-medium">🔐 The visualizer shows:</div>
+                            <ul className="text-xs text-gray-600 mt-1 space-y-1">
+                                <li>• Step-by-step process</li>
+                                <li>• Key generation</li>
+                                <li>• Encrypted/hashed output</li>
+                            </ul>
+                        </div>
+                    </div>
+                );
+            case 'collaborative-filtering':
+            case 'content-based-filtering':
+            case 'lru-cache':
+                return (
+                    <div className="space-y-2">
+                        <p className="text-xs text-gray-500 italic">Use the visualizer above for interactive recommendation</p>
+                        <div className="p-3 bg-pink-50 rounded-lg border border-pink-200">
+                            <div className="text-xs text-pink-600 font-medium">⭐ The visualizer shows:</div>
+                            <ul className="text-xs text-gray-600 mt-1 space-y-1">
+                                <li>• User-item matrix</li>
+                                <li>• Similarity computation</li>
+                                <li>• Personalized recommendations</li>
+                            </ul>
+                        </div>
+                    </div>
+                );
             default:
                 return null;
         }
@@ -575,6 +988,9 @@ export const AlgorithmDemo = ({ algorithmId }: AlgorithmDemoProps) => {
             case 'logistic-regression':
             case 'svm':
             case 'tf-idf-nb':
+            case 'decision-tree':
+            case 'random-forest':
+            case 'knn':
                 return (
                     <div className="space-y-3">
                         <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 text-center">
@@ -599,6 +1015,12 @@ export const AlgorithmDemo = ({ algorithmId }: AlgorithmDemoProps) => {
                                             : typeof r.recall === 'number' ? r.recall.toFixed(2) : '-'}
                                     </div>
                                 </div>
+                            </div>
+                        )}
+                        {r.f1Score !== undefined && (
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">F1 Score</div>
+                                <div className="text-lg font-bold text-emerald-600">{r.f1Score.toFixed(3)}</div>
                             </div>
                         )}
                     </div>
@@ -646,6 +1068,421 @@ export const AlgorithmDemo = ({ algorithmId }: AlgorithmDemoProps) => {
                             <div className="text-[10px] text-gray-500 uppercase mb-1">Silhouette Score</div>
                             <div className="text-xl font-bold text-gray-900">{r.silhouetteScore?.toFixed(3)}</div>
                         </div>
+                    </div>
+                );
+            case 'hierarchical-clustering':
+                return (
+                    <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">Clusters Found</div>
+                                <div className="text-2xl font-bold text-[#004040]">{r.nClusters}</div>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">Noise Points</div>
+                                <div className="text-2xl font-bold text-gray-600">{r.nNoise ?? 0}</div>
+                            </div>
+                        </div>
+                        <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                            <div className="text-[10px] text-gray-500 uppercase mb-1">Silhouette Score</div>
+                            <div className="text-xl font-bold text-gray-900">{r.silhouetteScore?.toFixed(3)}</div>
+                        </div>
+                        <p className="text-xs text-gray-500 text-center italic">See the visualization above for cluster animation</p>
+                    </div>
+                );
+            case 'quick-sort':
+            case 'merge-sort':
+            case 'bubble-sort':
+            case 'heap-sort':
+            case 'insertion-sort':
+                return (
+                    <div className="space-y-3">
+                        {/* Status Badge */}
+                        <div className="flex justify-center">
+                            <span className={`px-4 py-1.5 rounded-full text-sm font-bold ${r.isSorted ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
+                                {r.isSorted ? '✓ Sorted Successfully' : '✗ Sort Failed'}
+                            </span>
+                        </div>
+                        {/* Metrics Grid */}
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">Array Size</div>
+                                <div className="text-xl font-bold text-gray-900">{r.arraySize}</div>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">Time</div>
+                                <div className="text-xl font-bold text-blue-600">{r.executionTime} ms</div>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-orange-50 rounded-lg border border-orange-200 text-center">
+                                <div className="text-[10px] text-orange-600 uppercase mb-1">Comparisons</div>
+                                <div className="text-xl font-bold text-orange-700">{r.comparisons?.toLocaleString()}</div>
+                            </div>
+                            <div className="p-3 bg-violet-50 rounded-lg border border-violet-200 text-center">
+                                <div className="text-[10px] text-violet-600 uppercase mb-1">Swaps</div>
+                                <div className="text-xl font-bold text-violet-700">{r.swaps?.toLocaleString()}</div>
+                            </div>
+                        </div>
+                        <p className="text-xs text-gray-500 text-center italic">See the visualization above for sorting animation</p>
+                    </div>
+                );
+            case 'binary-search':
+            case 'linear-search':
+                return (
+                    <div className="space-y-3">
+                        {/* Status Badge */}
+                        <div className="flex justify-center">
+                            <span className={`px-4 py-1.5 rounded-full text-sm font-bold ${r.isFound ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
+                                {r.isFound ? `✓ Found at index ${r.targetIndex}` : '✗ Not Found'}
+                            </span>
+                        </div>
+                        {/* Metrics Grid */}
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">Array Size</div>
+                                <div className="text-xl font-bold text-gray-900">{r.arraySize}</div>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">Time</div>
+                                <div className="text-xl font-bold text-blue-600">{r.executionTime} ms</div>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-cyan-50 rounded-lg border border-cyan-200 text-center">
+                                <div className="text-[10px] text-cyan-600 uppercase mb-1">Steps</div>
+                                <div className="text-xl font-bold text-cyan-700">{r.stepsCount}</div>
+                            </div>
+                            <div className="p-3 bg-orange-50 rounded-lg border border-orange-200 text-center">
+                                <div className="text-[10px] text-orange-600 uppercase mb-1">Comparisons</div>
+                                <div className="text-xl font-bold text-orange-700">{r.comparisons}</div>
+                            </div>
+                        </div>
+                        <p className="text-xs text-gray-500 text-center italic">See the visualization above for search animation</p>
+                    </div>
+                );
+            case 'dijkstra':
+            case 'bfs-dfs':
+            case 'a-star':
+            case 'bellman-ford':
+            case 'floyd-warshall':
+                return (
+                    <div className="space-y-3">
+                        {/* Status Badge */}
+                        <div className="flex justify-center">
+                            <span className={`px-4 py-1.5 rounded-full text-sm font-bold ${r.pathFound ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
+                                {r.pathFound ? '✓ Path Found' : '✗ No Path'}
+                            </span>
+                        </div>
+                        {/* Metrics Grid */}
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-200 text-center">
+                                <div className="text-[10px] text-indigo-600 uppercase mb-1">Path Length</div>
+                                <div className="text-xl font-bold text-indigo-700">{r.pathLength}</div>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">Time</div>
+                                <div className="text-xl font-bold text-blue-600">{r.executionTime} ms</div>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-violet-50 rounded-lg border border-violet-200 text-center">
+                                <div className="text-[10px] text-violet-600 uppercase mb-1">Nodes Visited</div>
+                                <div className="text-xl font-bold text-violet-700">{r.nodesVisited}</div>
+                            </div>
+                            <div className="p-3 bg-amber-50 rounded-lg border border-amber-200 text-center">
+                                <div className="text-[10px] text-amber-600 uppercase mb-1">Edges Processed</div>
+                                <div className="text-xl font-bold text-amber-700">{r.edgesProcessed}</div>
+                            </div>
+                        </div>
+                        <p className="text-xs text-gray-500 text-center italic">See the visualization above for graph traversal</p>
+                    </div>
+                );
+            case 'pagerank':
+                return (
+                    <div className="space-y-3">
+                        <div className="flex justify-center">
+                            <span className="px-4 py-1.5 rounded-full text-sm font-bold bg-violet-100 text-violet-700">
+                                ✓ Converged Successfully
+                            </span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-200 text-center">
+                                <div className="text-[10px] text-indigo-600 uppercase mb-1">Accuracy</div>
+                                <div className="text-xl font-bold text-indigo-700">{r.accuracy?.toFixed(1)}%</div>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">Time</div>
+                                <div className="text-xl font-bold text-blue-600">{r.executionTime} ms</div>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-violet-50 rounded-lg border border-violet-200 text-center">
+                                <div className="text-[10px] text-violet-600 uppercase mb-1">Nodes</div>
+                                <div className="text-xl font-bold text-violet-700">{r.nodesVisited}</div>
+                            </div>
+                            <div className="p-3 bg-amber-50 rounded-lg border border-amber-200 text-center">
+                                <div className="text-[10px] text-amber-600 uppercase mb-1">Iterations</div>
+                                <div className="text-xl font-bold text-amber-700">{r.edgesProcessed}</div>
+                            </div>
+                        </div>
+                        <p className="text-xs text-gray-500 text-center italic">See the visualization above for PageRank distribution</p>
+                    </div>
+                );
+            case 'neural-network':
+            case 'cnn':
+            case 'rnn-lstm':
+            case 'transformer':
+                return (
+                    <div className="space-y-3">
+                        {/* Training Complete Badge */}
+                        <div className="flex justify-center">
+                            <span className="px-4 py-1.5 rounded-full text-sm font-bold bg-emerald-100 text-emerald-700">
+                                ✓ Training Complete
+                            </span>
+                        </div>
+                        {/* Accuracy Metrics */}
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg border border-emerald-200 text-center">
+                                <div className="text-[10px] text-emerald-600 uppercase font-bold mb-1">Train Accuracy</div>
+                                <div className="text-xl font-bold text-emerald-700">{r.trainAccuracy?.toFixed(1)}%</div>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">Val Accuracy</div>
+                                <div className="text-xl font-bold text-gray-700">{r.valAccuracy?.toFixed(1)}%</div>
+                            </div>
+                        </div>
+                        {/* Loss Metrics */}
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-rose-50 rounded-lg border border-rose-200 text-center">
+                                <div className="text-[10px] text-rose-600 uppercase mb-1">Train Loss</div>
+                                <div className="text-xl font-bold text-rose-700">{r.trainLoss?.toFixed(4)}</div>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">Val Loss</div>
+                                <div className="text-xl font-bold text-gray-700">{r.valLoss?.toFixed(4)}</div>
+                            </div>
+                        </div>
+                        {/* Additional Info */}
+                        <div className="grid grid-cols-3 gap-2">
+                            <div className="p-2 bg-purple-50 rounded-lg border border-purple-200 text-center">
+                                <div className="text-[9px] text-purple-600 uppercase">Epochs</div>
+                                <div className="text-lg font-bold text-purple-700">{r.epochsCompleted}</div>
+                            </div>
+                            <div className="p-2 bg-indigo-50 rounded-lg border border-indigo-200 text-center">
+                                <div className="text-[9px] text-indigo-600 uppercase">Layers</div>
+                                <div className="text-lg font-bold text-indigo-700">{r.layers}</div>
+                            </div>
+                            <div className="p-2 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[9px] text-gray-500 uppercase">Time</div>
+                                <div className="text-lg font-bold text-blue-600">{r.executionTime}s</div>
+                            </div>
+                        </div>
+                        <p className="text-xs text-gray-500 text-center italic">See the visualization above for training animation</p>
+                    </div>
+                );
+            case 'descriptive-stats':
+                return (
+                    <div className="space-y-3">
+                        <div className="grid grid-cols-3 gap-2">
+                            <div className="p-3 bg-teal-50 rounded-lg border border-teal-200 text-center">
+                                <div className="text-[10px] text-teal-600 uppercase mb-1">Mean</div>
+                                <div className="text-lg font-bold text-teal-700">{r.mean?.toFixed(2)}</div>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">Median</div>
+                                <div className="text-lg font-bold text-gray-700">{r.median?.toFixed(2)}</div>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">Mode</div>
+                                <div className="text-lg font-bold text-gray-700">{r.mode}</div>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-violet-50 rounded-lg border border-violet-200 text-center">
+                                <div className="text-[10px] text-violet-600 uppercase mb-1">Std Dev</div>
+                                <div className="text-lg font-bold text-violet-700">{r.stdDev?.toFixed(3)}</div>
+                            </div>
+                            <div className="p-3 bg-amber-50 rounded-lg border border-amber-200 text-center">
+                                <div className="text-[10px] text-amber-600 uppercase mb-1">Variance</div>
+                                <div className="text-lg font-bold text-amber-700">{r.variance?.toFixed(2)}</div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case 'standard-deviation':
+                return (
+                    <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-teal-50 rounded-lg border border-teal-200 text-center">
+                                <div className="text-[10px] text-teal-600 uppercase mb-1">Mean (μ)</div>
+                                <div className="text-xl font-bold text-teal-700">{r.mean?.toFixed(3)}</div>
+                            </div>
+                            <div className="p-3 bg-violet-50 rounded-lg border border-violet-200 text-center">
+                                <div className="text-[10px] text-violet-600 uppercase mb-1">Std Dev (σ)</div>
+                                <div className="text-xl font-bold text-violet-700">{r.stdDev?.toFixed(3)}</div>
+                            </div>
+                        </div>
+                        <div className="p-3 bg-amber-50 rounded-lg border border-amber-200 text-center">
+                            <div className="text-[10px] text-amber-600 uppercase mb-1">Variance (σ²)</div>
+                            <div className="text-xl font-bold text-amber-700">{r.variance?.toFixed(3)}</div>
+                        </div>
+                    </div>
+                );
+            case 'correlation':
+                return (
+                    <div className="space-y-3">
+                        <div className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200 text-center">
+                            <div className="text-[10px] text-blue-600 uppercase font-bold mb-1">Correlation (r)</div>
+                            <div className="text-2xl font-bold text-blue-700">{r.correlation?.toFixed(4)}</div>
+                            <div className="text-xs text-gray-500 mt-1">
+                                {(r.correlation || 0) > 0.7 ? 'Strong Positive' :
+                                    (r.correlation || 0) > 0.3 ? 'Moderate Positive' :
+                                        (r.correlation || 0) > -0.3 ? 'Weak/None' :
+                                            (r.correlation || 0) > -0.7 ? 'Moderate Negative' : 'Strong Negative'}
+                            </div>
+                        </div>
+                        <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                            <div className="text-[10px] text-gray-500 uppercase mb-1">R-squared (R²)</div>
+                            <div className="text-lg font-bold text-gray-700">{Math.pow(r.correlation || 0, 2).toFixed(4)}</div>
+                        </div>
+                    </div>
+                );
+            case 'bayesian-inference':
+                return (
+                    <div className="space-y-3">
+                        <div className="p-4 bg-gradient-to-br from-teal-50 to-emerald-50 rounded-lg border border-teal-200 text-center">
+                            <div className="text-[10px] text-teal-600 uppercase font-bold mb-1">Posterior P(A|B)</div>
+                            <div className="text-2xl font-bold text-teal-700">{r.posterior?.toFixed(4)}</div>
+                        </div>
+                        <p className="text-xs text-gray-500 text-center">Use the visualizer above to adjust priors and likelihoods</p>
+                    </div>
+                );
+            case 'markov-chain':
+                return (
+                    <div className="space-y-3">
+                        <div className="flex justify-center">
+                            <span className="px-4 py-1.5 rounded-full text-sm font-bold bg-purple-100 text-purple-700">
+                                ✓ Simulation Complete
+                            </span>
+                        </div>
+                        <div className="p-3 bg-purple-50 rounded-lg border border-purple-200 text-center">
+                            <div className="text-[10px] text-purple-600 uppercase mb-1">Steps Simulated</div>
+                            <div className="text-xl font-bold text-purple-700">{r.steps}</div>
+                        </div>
+                        <p className="text-xs text-gray-500 text-center">Use the visualizer above to see state transitions</p>
+                    </div>
+                );
+            case 'aes':
+            case 'rsa':
+                return (
+                    <div className="space-y-3">
+                        <div className="flex justify-center">
+                            <span className="px-4 py-1.5 rounded-full text-sm font-bold bg-emerald-100 text-emerald-700">
+                                ✓ Encrypted Successfully
+                            </span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-red-50 rounded-lg border border-red-200 text-center">
+                                <div className="text-[10px] text-red-600 uppercase mb-1">Key Size</div>
+                                <div className="text-xl font-bold text-red-700">{r.keySize} bit</div>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">Output Length</div>
+                                <div className="text-xl font-bold text-gray-700">{r.outputLength} bytes</div>
+                            </div>
+                        </div>
+                        <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                            <div className="text-[10px] text-gray-500 uppercase mb-1">Time</div>
+                            <div className="text-lg font-bold text-blue-600">{r.executionTime} ms</div>
+                        </div>
+                    </div>
+                );
+            case 'sha-256':
+            case 'hmac':
+                return (
+                    <div className="space-y-3">
+                        <div className="flex justify-center">
+                            <span className="px-4 py-1.5 rounded-full text-sm font-bold bg-emerald-100 text-emerald-700">
+                                ✓ Hash Computed
+                            </span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-amber-50 rounded-lg border border-amber-200 text-center">
+                                <div className="text-[10px] text-amber-600 uppercase mb-1">Hash Length</div>
+                                <div className="text-xl font-bold text-amber-700">{r.hashLength} bit</div>
+                            </div>
+                            <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                <div className="text-[10px] text-gray-500 uppercase mb-1">Output (hex)</div>
+                                <div className="text-xl font-bold text-gray-700">{r.outputLength} chars</div>
+                            </div>
+                        </div>
+                        <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                            <div className="text-[10px] text-gray-500 uppercase mb-1">Time</div>
+                            <div className="text-lg font-bold text-blue-600">{r.executionTime} ms</div>
+                        </div>
+                    </div>
+                );
+            case 'diffie-hellman':
+                return (
+                    <div className="space-y-3">
+                        <div className="flex justify-center">
+                            <span className="px-4 py-1.5 rounded-full text-sm font-bold bg-emerald-100 text-emerald-700">
+                                ✓ Key Exchange Complete
+                            </span>
+                        </div>
+                        <div className="p-3 bg-amber-50 rounded-lg border border-amber-200 text-center">
+                            <div className="text-[10px] text-amber-600 uppercase mb-1">Key Size</div>
+                            <div className="text-xl font-bold text-amber-700">{r.keySize} bit</div>
+                        </div>
+                        <p className="text-xs text-gray-500 text-center">See the visualizer above for Alice & Bob key exchange</p>
+                    </div>
+                );
+            case 'collaborative-filtering':
+            case 'content-based-filtering':
+                return (
+                    <div className="space-y-3">
+                        <div className="flex justify-center">
+                            <span className="px-4 py-1.5 rounded-full text-sm font-bold bg-pink-100 text-pink-700">
+                                ✓ Recommendations Ready
+                            </span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="p-3 bg-pink-50 rounded-lg border border-pink-200 text-center">
+                                <div className="text-[10px] text-pink-600 uppercase mb-1">Precision@K</div>
+                                <div className="text-xl font-bold text-pink-700">{((r.precisionAt || 0) * 100).toFixed(1)}%</div>
+                            </div>
+                            <div className="p-3 bg-violet-50 rounded-lg border border-violet-200 text-center">
+                                <div className="text-[10px] text-violet-600 uppercase mb-1">Recall@K</div>
+                                <div className="text-xl font-bold text-violet-700">{((r.recallAt || 0) * 100).toFixed(1)}%</div>
+                            </div>
+                        </div>
+                        <p className="text-xs text-gray-500 text-center">See the visualizer above for personalized recommendations</p>
+                    </div>
+                );
+            case 'lru-cache':
+                return (
+                    <div className="space-y-3">
+                        <div className="flex justify-center">
+                            <span className="px-4 py-1.5 rounded-full text-sm font-bold bg-pink-100 text-pink-700">
+                                ✓ Cache Performance
+                            </span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2">
+                            <div className="p-2 bg-emerald-50 rounded-lg border border-emerald-200 text-center">
+                                <div className="text-[9px] text-emerald-600 uppercase">Hits</div>
+                                <div className="text-lg font-bold text-emerald-700">{r.cacheHits}</div>
+                            </div>
+                            <div className="p-2 bg-rose-50 rounded-lg border border-rose-200 text-center">
+                                <div className="text-[9px] text-rose-600 uppercase">Misses</div>
+                                <div className="text-lg font-bold text-rose-700">{r.cacheMisses}</div>
+                            </div>
+                            <div className="p-2 bg-pink-50 rounded-lg border border-pink-200 text-center">
+                                <div className="text-[9px] text-pink-600 uppercase">Hit Rate</div>
+                                <div className="text-lg font-bold text-pink-700">{((r.hitRate || 0) * 100).toFixed(0)}%</div>
+                            </div>
+                        </div>
+                        <p className="text-xs text-gray-500 text-center">Use the visualizer above to interact with the cache</p>
                     </div>
                 );
             default:

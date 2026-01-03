@@ -13,6 +13,14 @@ import { SortingVisualizer } from '@/components/SortingVisualizer';
 import { SearchVisualizer } from '@/components/SearchVisualizer';
 import { StatsVisualizer } from '@/components/StatsVisualizer';
 import { ClusteringVisualizer } from '@/components/ClusteringVisualizer';
+import { TextMiningVisualizer } from '@/components/TextMiningVisualizer';
+import { ClassificationVisualizer } from '@/components/ClassificationVisualizer';
+import { RegressionVisualizer } from '@/components/RegressionVisualizer';
+import { PCAVisualizer } from '@/components/PCAVisualizer';
+import { GraphVisualizer } from '@/components/GraphVisualizer';
+import { DeepLearningVisualizer } from '@/components/DeepLearningVisualizer';
+import { SecurityVisualizer } from '@/components/SecurityVisualizer';
+import { RecommendationVisualizer } from '@/components/RecommendationVisualizer';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -48,8 +56,16 @@ export default async function AlgorithmPage({ params }: PageProps) {
 
     const isSortingAlgorithm = ['bubble-sort', 'quick-sort', 'merge-sort', 'heap-sort', 'insertion-sort'].includes(id);
     const isSearchAlgorithm = ['binary-search', 'linear-search'].includes(id);
-    const isStatsAlgorithm = ['descriptive-stats', 'standard-deviation', 'correlation'].includes(id);
+    const isStatsAlgorithm = ['descriptive-stats', 'standard-deviation', 'correlation', 'bayesian-inference', 'markov-chain'].includes(id);
     const isClusteringAlgorithm = ['k-means', 'dbscan', 'hierarchical-clustering'].includes(id);
+    const isTextMiningAlgorithm = ['tf-idf-nb', 'naive-bayes'].includes(id);
+    const isClassificationAlgorithm = ['logistic-regression', 'svm', 'decision-tree', 'random-forest', 'knn'].includes(id);
+    const isRegressionAlgorithm = ['linear-regression'].includes(id);
+    const isPCAAlgorithm = ['pca'].includes(id);
+    const isGraphAlgorithm = ['dijkstra', 'bfs-dfs', 'a-star', 'bellman-ford', 'floyd-warshall', 'pagerank'].includes(id);
+    const isDeepLearningAlgorithm = ['neural-network', 'cnn', 'rnn-lstm', 'transformer'].includes(id);
+    const isSecurityAlgorithm = ['aes', 'rsa', 'sha-256', 'hmac', 'diffie-hellman'].includes(id);
+    const isRecommendationAlgorithm = ['collaborative-filtering', 'content-based-filtering', 'lru-cache'].includes(id);
 
 
 
@@ -115,6 +131,30 @@ export default async function AlgorithmPage({ params }: PageProps) {
                         )}
                         {isClusteringAlgorithm && (
                             <ClusteringVisualizer algorithmId={id} />
+                        )}
+                        {isTextMiningAlgorithm && (
+                            <TextMiningVisualizer algorithmId={id} />
+                        )}
+                        {isClassificationAlgorithm && (
+                            <ClassificationVisualizer algorithmId={id} />
+                        )}
+                        {isRegressionAlgorithm && (
+                            <RegressionVisualizer algorithmId={id} />
+                        )}
+                        {isPCAAlgorithm && (
+                            <PCAVisualizer algorithmId={id} />
+                        )}
+                        {isGraphAlgorithm && (
+                            <GraphVisualizer algorithmId={id} />
+                        )}
+                        {isDeepLearningAlgorithm && (
+                            <DeepLearningVisualizer algorithmId={id} />
+                        )}
+                        {isSecurityAlgorithm && (
+                            <SecurityVisualizer algorithmId={id} />
+                        )}
+                        {isRecommendationAlgorithm && (
+                            <RecommendationVisualizer algorithmId={id} />
                         )}
 
                         {/* How It Works */}
